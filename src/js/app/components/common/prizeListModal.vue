@@ -33,8 +33,22 @@
 
                     <hr/>
 
+                    <template v-if="!addAutoGenPrizeFlag">
+                        <button type="button" class="btn btn-info btn-block mb-3" v-on:click="openAutoGenPrize(true)">生成奖项</button>
+                    </template>
+                    <template v-else>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" v-model="autoGenAmt" placeholder="生成奖项数量">
+                            <div class="input-group-append">
+                                <span class="input-group-text" style="cursor: pointer" v-on:click="saveAutoGenPrize">
+                                    <i class="fas fa-arrow-right"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </template>
+
                     <template v-if="!addNewFlag">
-                        <button type="button" class="btn btn-info btn-block" v-on:click="openAddPrize(true)">新增獎項</button>
+                        <button type="button" class="btn btn-info btn-block mb-3" v-on:click="openAddPrize(true)">新增獎項</button>
                     </template>
                     <template v-else>
                         <div class="input-group mb-3">
@@ -46,8 +60,6 @@
                             </div>
                         </div>
                     </template>
-
-
                 </div>
             </div>
         </div>
@@ -63,6 +75,9 @@ let targetDom = null;
 export default {
     data: function() {
         return {
+            addAutoGenPrizeFlag: false,
+            autoGenAmt: '',
+
             addNewFlag: false,
             newPrize: '',
 
@@ -105,6 +120,10 @@ export default {
             const that = this;
             that.addNewFlag = flag;
         },
+        openAutoGenPrize: function( flag){
+            const that = this;
+            that.addAutoGenPrizeFlag = flag;
+        },
         saveNewPrize: function() {
             const that = this;
             if ( !!that.newPrize) {
@@ -124,6 +143,32 @@ export default {
                 }
             }
         },
+        saveAutoGenPrize: function(){
+            const that = this;
+            if(that.autoGenAmt.match(/^\d{1,3}$/g)) {
+                let prizeList = JSON.parse( JSON.stringify( that.prizeList) );
+
+                for (let i = 1; i <= that.autoGenAmt; i++) {
+                    if (!prizeList.includes(i)) {
+                    const params = {
+                        prize: i,
+                    }
+                    that.$store.dispatch("saveNewPrize", params);
+                    
+                    mixpanel.track("add prize", params);
+                    } else {
+                        alert("已有相同的獎項");
+                    }
+                }
+                
+                that.autoGenAmt = "";
+                that.addAutoGenPrizeFlag = false;
+            }
+            else {
+                console.log("notmatch")
+            }
+            
+        },
     },
     watch: {
         triggerOpenPrizeList: function() {
@@ -141,6 +186,9 @@ export default {
         const that = this;
         targetDom = $(that.$el);
         targetDom.bind("shown.bs.modal", function() {
+            that.addAutoGenPrizeFlag = false,
+            that.autoGenAmt = "",
+            
             that.addNewFlag = false;
             that.newPrize = "";
 

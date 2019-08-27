@@ -19,6 +19,7 @@
                 <div class="modal-footer">
                     <div class="col-6 text-left">
                         <button type="button" class="btn btn-warning" v-on:click="randomSort">打亂排序</button>
+                        <button type="button" class="btn btn-warning" v-on:click="clearListing">重设</button>
                     </div>
                     <div class="col-6 text-right">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
@@ -62,6 +63,15 @@ export default {
                 shortlist_sort: that.shortlist_sort,
             };
             mixpanel.track("random sort shortlist", params);
+        },
+        clearListing: function(){
+            const that = this;
+            that.$store.dispatch("clearAllListing");
+            const params = {
+                shortlist_sort: that.shortlist_sort,
+            };
+            mixpanel.track("clear shortlist", params);
+            targetDom.modal("hide");
         }
     },
     watch: {

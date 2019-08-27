@@ -95,6 +95,14 @@ export default {
         state.config = config;
     },
 
+    clearAllListing(state, params) {
+        state.luckySN = [];
+        state.shortlist = [];
+        state.shortlistInput = "";
+        state.shortlist_sort = [];
+        state.prizeList = [];
+    },
+
     clearAllData(state, params) {
         let defaultConfig = JSON.parse( JSON.stringify( state.defaultConfig) );
         state.config = defaultConfig;

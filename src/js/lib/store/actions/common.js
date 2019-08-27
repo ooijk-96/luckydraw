@@ -8,6 +8,9 @@ export default {
     setConfig({ commit }, params) {
         commit("setConfig", params);
     },
+    clearAllListing({ commit }, params) {
+        commit("clearAllListing", params);
+    },
     clearAllData({ commit }, params) {
         commit("clearAllData", params);
     },
