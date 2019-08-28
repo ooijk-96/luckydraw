@@ -19,6 +19,8 @@ export default {
 
     shortlist_sort: [],
 
+    prizeListInput: "", //JK
+
     prizeList: [],
 
     luckySN: [],

@@ -17,6 +17,8 @@ export default {
         let shortlistInput = "";
         let shortlist_sort = [];
         let prizeList = [];
+        let prizeListInput = "";
+        let prizeList_sort = [];
         if (!!luckyDraw) {
             config = luckyDraw.config || {};
             luckySN = luckyDraw.luckySN || [];
@@ -24,6 +26,8 @@ export default {
             shortlistInput = luckyDraw.shortlistInput || "";
             shortlist_sort = luckyDraw.shortlist_sort || [];
             prizeList = luckyDraw.prizeList || [];
+            prizeListInput = luckyDraw.prizeListInput || ""; //JK
+            prizeList_sort = luckyDraw.prizeList_sort || []; //JK
         }
 
 
@@ -47,10 +51,18 @@ export default {
             prizeList = [];
         }
 
+        if (!Array.isArray(prizeList_sort)) { //JK
+            prizeList_sort = [];
+        }
+
 
 
         if ( typeof shortlistInput != "string") {
             shortlistInput = "";
+        }
+
+        if ( typeof prizeListInput != "string") { //JK
+            prizeListInput = "";
         }
 
 
@@ -60,6 +72,8 @@ export default {
         state.shortlistInput = shortlistInput;
         state.shortlist_sort = shortlist_sort;
         state.prizeList = prizeList;
+        state.prizeListInput = prizeListInput; //JK
+        state.prizeList_sort = prizeList_sort; //JK
     },
     saveToLocalStorage(state, params) {
         let config = JSON.parse(JSON.stringify( state.config));
@@ -68,6 +82,8 @@ export default {
         let shortlistInput = JSON.parse(JSON.stringify( state.shortlistInput));
         let shortlist_sort = JSON.parse(JSON.stringify( state.shortlist_sort));
         let prizeList = JSON.parse(JSON.stringify( state.prizeList));
+        let prizeListInput = JSON.parse(JSON.stringify( state.prizeListInput)); //JK
+        let prizeList_sort = JSON.parse(JSON.stringify( state.prizeList_sort)); //JK
 
 
         let luckyDraw = {
@@ -77,6 +93,8 @@ export default {
             shortlistInput: shortlistInput,
             shortlist_sort: shortlist_sort,
             prizeList: prizeList,
+            prizeListInput: prizeListInput,
+            prizeList_sort: prizeList_sort,
         };
 
         localStorage.setItem('luckyDrawSetting', JSON.stringify(luckyDraw));
@@ -277,6 +295,70 @@ export default {
         state.luckySN = luckySN;
         state.shortlist = shortlist;
 
+    },
+
+    setPrizeListInput(state, params) {
+        let prizeListInput = params.prizeListInput;
+        let prizeList = JSON.parse(JSON.stringify(state.prizeList));
+        let prizeList_sort = JSON.parse(JSON.stringify(state.prizeList_sort));
+
+        let prizeListInputObj = {};
+        let prizeListInputArr = prizeListInput.split("\n").map(function(data) {
+            data = data.split("|").map(function(string) {
+                return string.trim();
+            });
+            let Obj = {
+                prize: data[0],
+                prizeName: data[1] || "",
+            };
+            return Obj;
+        }).filter(function(data) {
+            if (!!data.prize) {
+                prizeListInputObj[data.prize] = data;
+                return !!data.prize;
+            } else {
+                return false;
+            }
+        });
+
+        let matchPrize = [];
+        prizeList = prizeList.map(function(data) {
+            data.del = !!!prizeListInputObj[data.prize];
+            if (!data.del) {
+                matchPrize.push(data.prize);
+                data.prizeName = prizeListInputObj[data.prize].prizeName;
+                if (!prizeList_sort.includes(data.sn)) {
+                    prizeList_sort.push(data.sn);
+                }
+            } else {
+                prizeList_sort = prizeList_sort.filter(function(sn) {
+                    return sn != data.sn;
+                });
+            }
+            return data;
+        });
+
+        prizeListInputArr.forEach(function(data) {
+            if (!matchPrize.includes(data.prize)) {
+                let sn = prizeList.length;
+                prizeList.push({
+                    sn: sn,
+                    prize: data.prize,
+                    prizeName: data.prizeName,
+                    award: [],
+                    del: false,
+                });
+                prizeList_sort.push(sn);
+            }
+        });
+
+        state.prizeListInput = prizeListInputArr.map(function(data) {
+            return ["prize", "prizeName"].map(function(key) {
+                return data[key]
+            }).filter(function(value) { return !!value }).join("|");
+        }).join("\n");
+        state.prizeList = prizeList;
+        state.prizeList_sort = prizeList_sort;
     },
 
     saveNewPrize(state, params) {

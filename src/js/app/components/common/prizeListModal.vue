@@ -12,7 +12,10 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <template v-for="(prize, prizeSN) in prizeList">
+                    <div class="form-group">
+                        <textarea class="form-control" v-model="prizeListTextarea" placeholder="请一行一行条例输入奖项名单"></textarea>
+                    </div>
+                    <!-- <template v-for="(prize, prizeSN) in prizeList">
                         <div class="input-group mb-3" v-if="focusEditSN === prizeSN">
                             <input type="text" ref="prizeEdit" class="form-control" v-model="editPrize" placeholder="編輯獎項名稱">
                             <div class="input-group-append">
@@ -29,11 +32,11 @@
                                 </span>
                             </div>
                         </div>
-                    </template>
+                    </template> -->
 
-                    <hr/>
+                    <!-- <hr/> -->
 
-                    <template v-if="!addAutoGenPrizeFlag">
+                    <!-- <template v-if="!addAutoGenPrizeFlag">
                         <button type="button" class="btn btn-info btn-block mb-3" v-on:click="openAutoGenPrize(true)">生成奖项</button>
                     </template>
                     <template v-else>
@@ -45,7 +48,7 @@
                                 </span>
                             </div>
                         </div>
-                    </template>
+                    </template> -->
 
                     <template v-if="!addNewFlag">
                         <button type="button" class="btn btn-info btn-block mb-3" v-on:click="openAddPrize(true)">新增獎項</button>
@@ -61,6 +64,16 @@
                         </div>
                     </template>
                 </div>
+                <div class="modal-footer">
+                    <!-- <div class="col-6 text-left">
+                        <button type="button" class="btn btn-warning" v-on:click="randomSort">打亂排序</button>
+                        <button type="button" class="btn btn-warning" v-on:click="clearListing">重设</button>
+                    </div> -->
+                    <div class="col-6 text-right">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" v-on:click="save">儲存</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -75,17 +88,30 @@ let targetDom = null;
 export default {
     data: function() {
         return {
+            prizeListTextarea: "",
+
             addAutoGenPrizeFlag: false,
-            autoGenAmt: '',
+            autoGenAmt: "",
 
             addNewFlag: false,
-            newPrize: '',
+            newPrize: "",
 
             focusEditSN: false,
-            editPrize: '',
+            editPrize: "",
         }
     },
     methods: {
+        save: function(){
+            const that = this;
+            const params = {
+                prizeListInput: that.prizeListTextarea
+            };
+            
+            that.$store.dispatch("setPrizeListInput", params);
+            targetDom.modal("hide");
+
+            mixpanel.track("save prize list", params);
+        },
         openEditPrize: function(prizeSN, prizeName){
             const that = this;
             that.focusEditSN = prizeSN;
@@ -144,29 +170,29 @@ export default {
             }
         },
         saveAutoGenPrize: function(){
-            const that = this;
-            if(that.autoGenAmt.match(/^\d{1,3}$/g)) {
-                let prizeList = JSON.parse( JSON.stringify( that.prizeList) );
+            // const that = this;
+            // if(that.autoGenAmt.match(/^\d{1,3}$/g)) {
+            //     let prizeList = JSON.parse( JSON.stringify( that.prizeList) );
 
-                for (let i = 1; i <= that.autoGenAmt; i++) {
-                    if (!prizeList.includes(i)) {
-                    const params = {
-                        prize: i,
-                    }
-                    that.$store.dispatch("saveNewPrize", params);
+            //     for (let i = 1; i <= that.autoGenAmt; i++) {
+            //         if (!prizeList.includes(i)) {
+            //         const params = {
+            //             prize: i,
+            //         }
+            //         that.$store.dispatch("saveNewPrize", params);
                     
-                    mixpanel.track("add prize", params);
-                    } else {
-                        alert("已有相同的獎項");
-                    }
-                }
+            //         mixpanel.track("add prize", params);
+            //         } else {
+            //             alert("已有相同的獎項");
+            //         }
+            //     }
                 
-                that.autoGenAmt = "";
-                that.addAutoGenPrizeFlag = false;
-            }
-            else {
-                console.log("notmatch")
-            }
+            //     that.autoGenAmt = "";
+            //     that.addAutoGenPrizeFlag = false;
+            // }
+            // else {
+            //     console.log("notmatch")
+            // }
             
         },
     },
@@ -179,6 +205,8 @@ export default {
     computed: {
         ...mapGetters([
             "triggerOpenPrizeList",
+            "prizeListInput",
+            "prizeList_sort",
             "prizeList",
         ])
     },
@@ -186,6 +214,8 @@ export default {
         const that = this;
         targetDom = $(that.$el);
         targetDom.bind("shown.bs.modal", function() {
+            that.prizeListTextarea = that.prizeListInput;
+
             that.addAutoGenPrizeFlag = false,
             that.autoGenAmt = "",
             

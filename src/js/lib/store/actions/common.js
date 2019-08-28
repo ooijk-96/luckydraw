@@ -42,6 +42,10 @@ export default {
         commit("setShortlistRandomSort", params);
     },
 
+    setPrizeListInput({ commit }, params) { //JK
+        commit("setPrizeListInput", params);
+    },
+
     setFocusSN({commit}, params) {
         commit("setFocusSN", params);
     },
