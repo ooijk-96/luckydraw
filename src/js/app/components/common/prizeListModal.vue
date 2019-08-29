@@ -50,25 +50,38 @@
                         </div>
                     </template> -->
 
-                    <template v-if="!addNewFlag">
+                    <!-- <template v-if="!addNewFlag">
                         <button type="button" class="btn btn-info btn-block mb-3" v-on:click="openAddPrize(true)">新增獎項</button>
                     </template>
                     <template v-else>
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" v-model="newPrize" placeholder="新增的獎項名稱">
+                            <input type="text" class="form-control" v-model="autoGenAmt" placeholder="生成奖项数量">
                             <div class="input-group-append">
-                                <span class="input-group-text" style="cursor: pointer" v-on:click="saveNewPrize">
-                                    <i class="far fa-save"></i>
+                                <span class="input-group-text" style="cursor: pointer" v-on:click="saveAutoGenPrize">
+                                    <i class="fas fa-arrow-right"></i>
                                 </span>
                             </div>
                         </div>
-                    </template>
+                    </template> -->
                 </div>
                 <div class="modal-footer">
-                    <!-- <div class="col-6 text-left">
-                        <button type="button" class="btn btn-warning" v-on:click="randomSort">打亂排序</button>
-                        <button type="button" class="btn btn-warning" v-on:click="clearListing">重设</button>
-                    </div> -->
+                    <div class="col-6 text-left">
+                        <template v-if="!addAutoGenPrizeFlag">
+                            <button type="button" class="btn btn-info btn-block" v-on:click="openAutoGenPrize(true)">生成奖项</button>
+                        </template>
+                        <template v-else>
+                            <div class="input-group">
+                                <input type="text" class="form-control" v-model="autoGenAmt" placeholder="生成奖项数量">
+                                <div class="input-group-append">
+                                    <span class="input-group-text" style="cursor: pointer" v-on:click="saveAutoGenPrize">
+                                        <i class="fas fa-arrow-right"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </template>
+                        <!-- <button type="button" class="btn btn-warning" >打亂排序</button>
+                        <button type="button" class="btn btn-warning" >重设</button> -->
+                    </div>
                     <div class="col-6 text-right">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
                         <button type="button" class="btn btn-primary" v-on:click="save">儲存</button>
@@ -170,29 +183,26 @@ export default {
             }
         },
         saveAutoGenPrize: function(){
-            // const that = this;
-            // if(that.autoGenAmt.match(/^\d{1,3}$/g)) {
-            //     let prizeList = JSON.parse( JSON.stringify( that.prizeList) );
+            const that = this;
+            if(that.autoGenAmt.match(/^\d{1,3}$/g)) {
+                let prizeInputTemp = "";
 
-            //     for (let i = 1; i <= that.autoGenAmt; i++) {
-            //         if (!prizeList.includes(i)) {
-            //         const params = {
-            //             prize: i,
-            //         }
-            //         that.$store.dispatch("saveNewPrize", params);
-                    
-            //         mixpanel.track("add prize", params);
-            //         } else {
-            //             alert("已有相同的獎項");
-            //         }
-            //     }
+                for (let i = 1; i <= that.autoGenAmt; i++) {
+                    prizeInputTemp = prizeInputTemp.concat(i).concat('\n')
+                }
                 
-            //     that.autoGenAmt = "";
-            //     that.addAutoGenPrizeFlag = false;
-            // }
-            // else {
-            //     console.log("notmatch")
-            // }
+                const params = {
+                    prizeListInput: prizeInputTemp
+                };
+                
+                that.$store.dispatch("setPrizeListInput", params);
+                targetDom.modal("hide");
+
+                mixpanel.track("save prize list", params);
+            }
+            else {
+                alert("输入失败！生成奖项数量只能3个数字")
+            }
             
         },
     },

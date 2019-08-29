@@ -119,6 +119,8 @@ export default {
         state.shortlistInput = "";
         state.shortlist_sort = [];
         state.prizeList = [];
+        state.prizeListInput = "";
+        state.prizeList_sort = [];
     },
 
     clearAllData(state, params) {
@@ -129,6 +131,8 @@ export default {
         state.shortlistInput = "";
         state.shortlist_sort = [];
         state.prizeList = [];
+        state.prizeListInput = "";
+        state.prizeList_sort = [];
     },
 
     triggerOpenEditListModal(state, params) {
