@@ -15,7 +15,7 @@ export default {
 
     prizeList: state => state.prizeList,
 
-    prizeListInput: state => state.prizeListInput, //JK
+    prizeListInput: state => state.prizeListInput,
 
     prizeListByAward: function(state){
         let shortlist = JSON.parse(JSON.stringify(state.shortlist));

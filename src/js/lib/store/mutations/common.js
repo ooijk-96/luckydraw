@@ -26,8 +26,8 @@ export default {
             shortlistInput = luckyDraw.shortlistInput || "";
             shortlist_sort = luckyDraw.shortlist_sort || [];
             prizeList = luckyDraw.prizeList || [];
-            prizeListInput = luckyDraw.prizeListInput || ""; //JK
-            prizeList_sort = luckyDraw.prizeList_sort || []; //JK
+            prizeListInput = luckyDraw.prizeListInput || ""; 
+            prizeList_sort = luckyDraw.prizeList_sort || []; 
         }
 
 
@@ -51,7 +51,7 @@ export default {
             prizeList = [];
         }
 
-        if (!Array.isArray(prizeList_sort)) { //JK
+        if (!Array.isArray(prizeList_sort)) {
             prizeList_sort = [];
         }
 
@@ -61,7 +61,7 @@ export default {
             shortlistInput = "";
         }
 
-        if ( typeof prizeListInput != "string") { //JK
+        if ( typeof prizeListInput != "string") { 
             prizeListInput = "";
         }
 
@@ -72,8 +72,8 @@ export default {
         state.shortlistInput = shortlistInput;
         state.shortlist_sort = shortlist_sort;
         state.prizeList = prizeList;
-        state.prizeListInput = prizeListInput; //JK
-        state.prizeList_sort = prizeList_sort; //JK
+        state.prizeListInput = prizeListInput;
+        state.prizeList_sort = prizeList_sort;
     },
     saveToLocalStorage(state, params) {
         let config = JSON.parse(JSON.stringify( state.config));
@@ -82,8 +82,8 @@ export default {
         let shortlistInput = JSON.parse(JSON.stringify( state.shortlistInput));
         let shortlist_sort = JSON.parse(JSON.stringify( state.shortlist_sort));
         let prizeList = JSON.parse(JSON.stringify( state.prizeList));
-        let prizeListInput = JSON.parse(JSON.stringify( state.prizeListInput)); //JK
-        let prizeList_sort = JSON.parse(JSON.stringify( state.prizeList_sort)); //JK
+        let prizeListInput = JSON.parse(JSON.stringify( state.prizeListInput));
+        let prizeList_sort = JSON.parse(JSON.stringify( state.prizeList_sort));
 
 
         let luckyDraw = {
@@ -284,7 +284,15 @@ export default {
 
         let filterResult = shortlist.filter(function(data) {
             if (data.sn == focusSN) {
-                data.award.push(params.award);
+                let prizeNameTemp = "";
+
+                if(params.award.prizeName != "")
+                    prizeNameTemp = prizeNameTemp.concat("[").concat(params.award.prizeName).concat("]");
+                else 
+                    prizeNameTemp = "[-]";
+
+                data.award.push(params.award.prize.concat(prizeNameTemp));
+
                 return true;
             } else {
                 return false;
@@ -349,7 +357,6 @@ export default {
                     sn: sn,
                     prize: data.prize,
                     prizeName: data.prizeName,
-                    award: [],
                     del: false,
                 });
                 prizeList_sort.push(sn);

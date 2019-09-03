@@ -50,7 +50,7 @@
                                             {{luckyOption[shortlist.lucky]}}
                                         </th>
                                         <td>{{shortlist.name}}</td>
-                                        <td >{{shortlist.award || "--"}}</td>
+                                        <td>{{shortlist.award || "--"}}</td>
                                         <td>
                                             <button class="btn btn-success" v-on:click="openEdit(shortlistIndex, true)">
                                                 <i class="fas fa-edit"></i>
@@ -67,7 +67,7 @@
                     <div class="col-6 text-left">
                     </div>
                     <div class="col-6 text-right">
-                        <button type="button" class="btn btn-primary" v-on:click="download">下載</button>
+                        <!-- <button type="button" class="btn btn-primary" v-on:click="download">下載</button> -->
                     </div>
                 </div>
             </div>

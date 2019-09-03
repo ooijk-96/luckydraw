@@ -17,7 +17,7 @@ const mixpanel_modul = {
     waitFunc: [],
     actWaitFunc: function(){
         if (mixpanel_modul.waitFunc.length >= 0) {
-            console.log("actWaitFunc", mixpanel_modul.waitFunc);
+            // console.log("actWaitFunc", mixpanel_modul.waitFunc);
             mixpanel_modul.waitFunc.forEach(function(actFunc){
                 actFunc();
             });

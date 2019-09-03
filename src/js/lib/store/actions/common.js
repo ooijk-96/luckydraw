@@ -42,7 +42,7 @@ export default {
         commit("setShortlistRandomSort", params);
     },
 
-    setPrizeListInput({ commit }, params) { //JK
+    setPrizeListInput({ commit }, params) {
         commit("setPrizeListInput", params);
     },
 
