@@ -285,14 +285,14 @@ export default {
         let filterResult = shortlist.filter(function(data) {
             if (data.sn == focusSN) {
                 let prizeNameTemp = "";
-
+                
                 if(params.award.prizeName != "")
-                    prizeNameTemp = prizeNameTemp.concat("[").concat(params.award.prizeName).concat("]");
+                    prizeNameTemp = prizeNameTemp.concat(", [").concat(params.award.prizeName).concat("]");
                 else 
-                    prizeNameTemp = "[-]";
+                    prizeNameTemp = ", [-]";
 
                 data.award.push(params.award.prize.concat(prizeNameTemp));
-
+                // data.award.push(params.award.prize);
                 return true;
             } else {
                 return false;

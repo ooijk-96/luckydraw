@@ -21,6 +21,9 @@ export default {
         let shortlist = JSON.parse(JSON.stringify(state.shortlist));
         let prizeList = JSON.parse(JSON.stringify(state.prizeList));
 
+        console.log("shortlist", JSON.stringify(state.shortlist));
+        console.log("prizeList", JSON.stringify(state.prizeList));
+
         let matchPrize = {};
         shortlist.forEach(function(data){
             if (data.award.length > 0) {
@@ -37,10 +40,18 @@ export default {
         });
 
         let prizeListByAward = prizeList.map(function(prize, sn){
+            let prizeNameTemp = "";
+
+            if(prize.prizeName != "")
+                prizeNameTemp = prizeNameTemp.concat(", [").concat(prize.prizeName).concat("]")
+            else 
+                prizeNameTemp = ", [-]"
+
             return {
                 sn: sn,
-                prize: prize,
-                count: matchPrize[prize] || 0,
+                prize: prize.prize.concat(prizeNameTemp),
+                count: JSON.stringify(matchPrize[''+prize.prize+', ['+(prize.prizeName || '-')+']']) || 0,
+                // count: matchPrize[prize] || 0,
             };
         });
 

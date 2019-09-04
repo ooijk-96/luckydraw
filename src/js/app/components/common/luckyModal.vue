@@ -15,9 +15,13 @@
                             <candidate-box v-bind:candidate-info="focusShortlist"></candidate-box>
                         </div>
                         中獎獎項
-                        <div class="form-group">
-                            <div class="form-control text-center" v-html="award"></div>
+                        <div class="form-group" v-if="award.prizeName != ''">
+                            <div class="form-control text-center">{{award.prize}}, [{{award.prizeName}}]</div>
+                            <!-- <div class="form-control text-center" v-html="award">{{award.prize}}</div> -->
                             <!-- <input type="text" class="form-control text-center" v-model="award" placeholder="輸入獎項名稱"> -->
+                        </div>
+                        <div class="form-group" v-else>
+                            <div class="form-control text-center">{{award.prize}}, [-]</div>
                         </div>
                     </div>
                 </div>

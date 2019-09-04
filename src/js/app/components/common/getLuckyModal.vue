@@ -17,6 +17,8 @@
                             <div class="row">
                                 <div class="col-9">{{prizeInfo.prize}}</div>
                                 <div class="col-3">[{{prizeInfo.count}}]</div>
+                                <!-- <div class="col-9">{{prizeInfo.prize}}</div>
+                                <div class="col-3">[{{prizeInfo.count}}]</div> -->
                             </div>
                         </button>
                     </template>
